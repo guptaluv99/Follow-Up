@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html ng-app="exambazaar">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.css">
+</head>
+    
+    
+    <style>
+        .circle-plus {height:3em; width:3em; font-size:1em /*Will change icon size*/;}
+.circle-plus .circle {position: relative; width: 2.25em; height: 2.25em; border-radius: 50%; border: solid .4em #DFDAD7;}
+.circle-plus .circle .horizontal {position: absolute; background-color: #DFDAD7; width: 1.2em; height: .35em; top: 0.9em; left: 0.55em;}
+.circle-plus .circle .vertical {position: absolute; background-color: #DFDAD7; width: .35em; height: 1.2em; top: 0.55em; left: 0.9em;}
+    </style>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-animate.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-aria.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-messages.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.8/angular-material.min.js"></script>
+<link rel="stylesheet" href="js/angular-ui-notification.min.css">
+<script src="js/angular-ui-notification.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+<script src="app.js"></script>
+    
+<body ng-controller="followUpCtrl">
+    <div layout="column" layout-align="center center" class="width100" style="margin-bottom: 20px;">
+        <div flex=10>
+            Add a new Follow up.
+        </div>
+        <div class="circle-plus" flex=10>
+          <div class="circle" ng-click="newFollow()">
+            <div class="horizontal"></div>
+            <div class="vertical"></div>
+          </div>
+        </div>
+    </div>
+    <div layout="column" layout-align="center center" class="width100" ng-show="showAddForm || showNewForm">
+        <div layout="row" layout-align="start start" layout-wrap>
+        <div flex=20>
+        <md-radio-group ng-model="type">
+          <md-radio-button value="Person" class="md-primary">Person</md-radio-button>
+          <md-radio-button value="Coaching" class="md-primary">Coaching</md-radio-button>
+        </md-radio-group>
+        </div>
+        <div flex=20>
+        <md-input-container>
+            <label>Name</label>
+            <input ng-model="name" type="text">
+        </md-input-container>
+        </div>
+        <div flex=20>
+        <md-input-container>
+            <label>Phone</label>
+            <input ng-model="phone" type="text">
+        </md-input-container>
+        </div>
+        <div flex=20>
+        <md-input-container>
+            <label>Email</label>
+            <input ng-model="email" type="email">
+        </md-input-container>
+        </div>
+        <div flex=20>
+        Complete: <md-switch ng-model="complete">
+        </md-switch>
+        </div>
+        <div flex=20>
+        <md-input-container>
+            <label>Next Follow At: </label>
+            <md-datepicker ng-model="nextFollowAt"></md-datepicker>
+        </md-input-container>
+        </div>
+        <div flex=20>
+        <md-input-container class="md-block">
+          <label>Comments</label>
+          <textarea ng-model="comment" md-maxlength="150" rows="5"></textarea>
+        </md-input-container>
+        </div>
+        <!--<div flex=20>
+        <md-autocomplete flex
+       md-selected-item="selectedItem"
+       md-selected-item-change= "selectedItemChange(item)"
+       md-search-text="searchText"
+       md-items="item in querySearch(searchText)"
+       md-item-text="item.name"
+       md-delay="300"
+       md-menu-class="autocomplete"
+       placeholder="Linked to">
+           <md-item-template>
+            <div layout="row" layout-align="start start">   
+             <div class="item-title font12">
+                 <span class="font14"><strong>{{item.name}}</strong></span>
+             </div>
+            </div>
+           </md-item-template>
+       </md-autocomplete>
+        </div>-->
+        <div flex=20>
+        <md-button class="md-raised" ng-click="newFollowUp()">Save</md-button>
+        </div>
+        </div>
+    </div>
+    
+    
+    <div layout="row" layout-align="center center" style="font-weight: bold; border-bottom: 1px solid black; margin-bottom: 10px;">
+        <div flex=10>
+            Name
+        </div>
+        <div flex=10>
+            Phone
+        </div>
+        <div flex=10>
+            Email
+        </div>
+        <div flex=10>
+            Type
+        </div>
+        <div flex=10>
+            Comment
+        </div>
+        <div flex=20>
+            Next Follow At
+        </div>
+        <div flex=10>
+            is complete?
+        </div>
+        <div flex=10>
+            Add more
+        </div>
+        <div flex=10>
+            Update
+        </div>
+    </div>
+    
+    <div layout="column" ng-repeat="parentFollowUp in allFollowUps" style="border-bottom: 1px solid black; padding-bottom: 15px;">
+        <div layout="row" layout-align="center center" ng-repeat="thisFollowUp in parentFollowUp" style="border-bottom: 1px solid whitesmoke; padding-bottom: 10px;">
+            <div flex=10>
+                {{thisFollowUp.name}}
+            </div>
+            <div flex=10>
+                {{thisFollowUp.phone}}
+            </div>
+            <div flex=10>
+                {{thisFollowUp.email}}
+            </div>
+            <div flex=10>
+                {{thisFollowUp.type}}
+            </div>
+            <div flex=10>
+                {{thisFollowUp.comment}}
+            </div>
+            <div flex=20>
+                <md-datepicker ng-model="thisFollowUp.nextFollowAt"></md-datepicker>
+            </div>
+            <div flex=10>
+                <md-switch ng-model="thisFollowUp.complete"></md-switch>
+            </div>
+            <div class="circle-plus" flex=10>
+              <div class="circle" ng-click="addMore(thisFollowUp._id)">
+                <div class="horizontal"></div>
+                <div class="vertical"></div>
+              </div>
+            </div>
+            <div flex=10>
+                <md-button class="md-raised" ng-click="updateFollowUp(thisFollowUp._id, thisFollowUp.nextFollowAt, thisFollowUp.complete)">Update</md-button>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
